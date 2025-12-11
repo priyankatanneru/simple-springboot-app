@@ -1,10 +1,5 @@
 pipeline {
-  agent {
-    docker {
-      image 'docker:24.0'       // Docker CLI + DinD client
-      args '--privileged -v /var/run/docker.sock:/var/run/docker.sock'
-    }
-  }
+  agent any   // Run on the existing Jenkins node (with Docker + Maven installed)
 
   tools {
     jdk 'JDK17'
@@ -51,10 +46,16 @@ pipeline {
         script {
           def tag = "build-${env.BUILD_NUMBER}"
 
+          // Build Docker image
           sh "docker build -t ${IMAGE_NAME}:${tag} ."
+
+          // Login to Docker Hub
           sh "docker login -u $DOCKERHUB -p $DOCKERHUB_PWD"
+
+          // Push Docker image
           sh "docker push ${IMAGE_NAME}:${tag}"
 
+          // Tag and push latest
           sh "docker tag ${IMAGE_NAME}:${tag} ${IMAGE_NAME}:latest"
           sh "docker push ${IMAGE_NAME}:latest"
 
