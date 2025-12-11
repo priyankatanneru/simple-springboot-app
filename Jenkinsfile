@@ -22,10 +22,13 @@ pipeline {
     stage('SonarQube analysis') {
       steps {
         withSonarQubeEnv('sonarqube') {
-          sh 'mvn sonar:sonar -Dsonar.login=$sonar-token'
+          withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
+            sh 'mvn sonar:sonar -Dsonar.login=$SONAR_TOKEN'
+          }
         }
       }
     }
+
 
     stage('Run tests') {
       steps {
