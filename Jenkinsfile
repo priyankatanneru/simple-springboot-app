@@ -1,5 +1,9 @@
 pipeline {
   agent any
+  tools {
+    jdk 'JDK17'
+    maven 'Maven_3_9'
+  }
 
   environment {
     DOCKERHUB = "chikky712"
