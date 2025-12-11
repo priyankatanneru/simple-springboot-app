@@ -9,7 +9,7 @@ pipeline {
   stages {
     stage('Checkout') {
       steps {
-        git credentialsId: 'github-creds', url: 'https://github.com/priyankatanneru/simple-springboot-app.git'
+        git branch: 'main', credentialsId: 'github-creds', url: 'https://github.com/priyankatanneru/simple-springboot-app.git'
       }
     }
 
